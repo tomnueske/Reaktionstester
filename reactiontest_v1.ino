@@ -18,7 +18,7 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(6, INPUT);
   Serial.begin(9600);
- 
+  animation();
 }
 
 void loop() {
@@ -51,6 +51,59 @@ void loop() {
   } 
   endtime = millis();
   realtime = (endtime - starttime);
+if(realtime ==0){
+  buttonstate =digitalRead(6);
+  while (digitalRead(6) == HIGH){
+    animation();
+    buttonstate =digitalRead(6);
+  }
+  
+}
+else{
+  ausgeben(realtime);
+}
+  
+}
+void animation(){
+  int time = 100;
+  digitalWrite(13, HIGH);   
+  delay(time);                       
+  digitalWrite(13, LOW);    
+  delay(time);                       
+  
+  digitalWrite(12, HIGH);   
+  delay(time);                       
+  digitalWrite(12, LOW);    
+  delay(time);                       
+  
+  digitalWrite(11, HIGH);   
+  delay(time);                       
+  digitalWrite(11, LOW);    
+  delay(time);                       
+  
+  digitalWrite(10, HIGH);  
+  delay(time);                       
+  digitalWrite(10, LOW);    
+  delay(time);                       
+  
+  digitalWrite(9, HIGH);   
+  delay(time);                       
+  digitalWrite(9, LOW);    
+  delay(time);                       
+  
+  digitalWrite(8, HIGH);   
+  delay(time);                       
+  digitalWrite(8, LOW);    
+  delay(time);                       
+  
+  digitalWrite(7, HIGH);   
+  delay(time);                      
+  digitalWrite(7, LOW);    
+  delay(time);
+  
+}
+
+void ausgeben (int realtime){
   Serial.println(realtime);
   if(realtime >= 50){
  
@@ -72,11 +125,11 @@ void loop() {
  
   digitalWrite(11, HIGH);  
   }
-  if(realtime >=500){
+  if(realtime >=300){
  
   digitalWrite(12, HIGH);  
   }
-  if(realtime >=750){
+  if(realtime >=350){
  
   digitalWrite(13, HIGH);  
   }

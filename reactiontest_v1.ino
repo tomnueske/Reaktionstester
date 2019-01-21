@@ -1,15 +1,22 @@
-/*
 
-*/
 
-int randomtime;
-unsigned long starttime;
-unsigned long endtime;
-unsigned long realtime;
-int buttonstate;
+
+
+#include <Arduino.h>
+#include <TM1637Display.h> //Bibliothek für die 7-Segment Anzeige
+
+int randomtime; //Variable für Zufallszahl
+unsigned long starttime; //Variable für Start millis()
+unsigned long endtime; //Variable für Ende millis()
+unsigned long realtime; //endtime - starttime
+int buttonstate; //Variable zum Speichern des Status des Buttons
+
+#define CLK 2                                               // define pin for display
+#define DIO 3  
+TM1637Display display(CLK, DIO); //init display
 
 void setup() {
-  pinMode(13, OUTPUT);
+  pinMode(13, OUTPUT); //init pins
   pinMode(12, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(10, OUTPUT);
@@ -17,15 +24,18 @@ void setup() {
   pinMode(8, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(6, INPUT);
+  display.setBrightness(5); //setup display
+  display.clear();
   Serial.begin(9600);
-  animation();
+  animation(); //startanimation
 }
 
 void loop() {
-  buttonstate =digitalRead(6);
+  buttonstate =digitalRead(6); //wait for button press
   while (digitalRead(6) == LOW){
     buttonstate =digitalRead(6);
   }
+  display.clear(); // start run
   digitalWrite(13, HIGH);
   digitalWrite(12, HIGH);
   digitalWrite(11, HIGH);
@@ -44,14 +54,14 @@ void loop() {
   digitalWrite(9, LOW);
   digitalWrite(8, LOW);
   digitalWrite(7, LOW);
-  starttime = millis();
+  starttime = millis(); //start measure
   buttonstate =digitalRead(6);
   while (buttonstate == LOW){
     buttonstate =digitalRead(6);
   } 
-  endtime = millis();
+  endtime = millis(); // end measure
   realtime = (endtime - starttime);
-if(realtime ==0){
+if(realtime ==0){ //exeption on button kept beeing pressed
   buttonstate =digitalRead(6);
   while (digitalRead(6) == HIGH){
     animation();
@@ -59,12 +69,13 @@ if(realtime ==0){
   }
   
 }
-else{
-  ausgeben(realtime);
+else{ // OUTPUTS: choose by uncommenting
+  //ausgeben(realtime);
+  printtodisplay(realtime);
 }
   
 }
-void animation(){
+void animation(){ //startanimaton
   int time = 100;
   digitalWrite(13, HIGH);   
   delay(time);                       
@@ -103,7 +114,7 @@ void animation(){
   
 }
 
-void ausgeben (int realtime){
+void ausgeben (int realtime){ //output in 50ms steps via given LEDs
   Serial.println(realtime);
   if(realtime >= 50){
  
@@ -135,4 +146,9 @@ void ausgeben (int realtime){
   }
   delay(500);
   
+}
+void printtodisplay(int realtime){ //output via display
+  Serial.println(realtime);
+  display.showNumberDec(realtime, true);
+  delay(500);
 }

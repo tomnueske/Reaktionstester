@@ -70,7 +70,7 @@ if(realtime ==0){ //exeption on button kept beeing pressed
   
 }
 else{ // OUTPUTS: choose by uncommenting
-  //ausgeben(realtime);
+  ausgeben(realtime);
   printtodisplay(realtime);
 }
   
@@ -149,6 +149,12 @@ void ausgeben (int realtime){ //output in 50ms steps via given LEDs
 }
 void printtodisplay(int realtime){ //output via display
   Serial.println(realtime);
-  display.showNumberDec(realtime, true);
+  
+  if(realtime<=9999){ //exception out of display space
+    display.showNumberDec(realtime, true);
+  }
+  else{
+    animation();
+  }
   delay(500);
 }
